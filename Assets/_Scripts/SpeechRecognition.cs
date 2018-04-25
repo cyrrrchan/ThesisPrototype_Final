@@ -31,7 +31,9 @@ public class SpeechRecognition : MonoBehaviour
 {
 
     //public GameManager gameManager;
-    //public AudioClip sorryClip;
+    public AudioSource _maxwellAudioSource;
+    public AudioClip _maxwellIntroResponse;
+    public AudioClip _maxwellAnythingElseResponse;
     //public List<AudioClip> helpClips;
 
 
@@ -54,7 +56,7 @@ public class SpeechRecognition : MonoBehaviour
     private string _conversationVersionDate = "2017-05-26";
     private string convo_workspaceId = "351ae63d-3765-462a-9538-6eaa5d3b5731";
 
-    public Text ResultsField;
+    //public Text ResultsField;
 
     private int _recordingRoutine = 0;
     private string _microphoneID = null;
@@ -259,7 +261,13 @@ public class SpeechRecognition : MonoBehaviour
 
             if (intent == "intro")
             {
-                Debug.Log("ResultsField");
+                if (!_maxwellAudioSource.isPlaying)
+                {
+                    Debug.Log("intro question asked");
+                    _maxwellAudioSource.clip = _maxwellIntroResponse;
+                    _maxwellAudioSource.Play();
+                }
+
                 foreach (RuntimeEntity entity in messageResponse.entities)
                 {
                     Debug.Log("ResultsField");
@@ -304,22 +312,16 @@ public class SpeechRecognition : MonoBehaviour
                     //gameManager.PlayError(sorryClip);
                 }
             }
-            else if (intent == "destroy")
-            {
-                //gameManager.DestroyAtPointer();
-            }
-            else if (intent == "help")
-            {
-                //if (helpClips.Count > 0)
-                //{
-                    //gameManager.PlayClip(helpClips[Random.Range(0, helpClips.Count)]);
-
-                //}
-            }
         }
         else
         {
-            Debug.Log("Failed to invoke OnMessage();");
+            if (!_maxwellAudioSource.isPlaying)
+            {
+                Debug.Log("anything else asked");
+                _maxwellAudioSource.clip = _maxwellAnythingElseResponse;
+                _maxwellAudioSource.Play();
+            }
+            //Debug.Log("Failed to invoke OnMessage();");
         }
     }
 
